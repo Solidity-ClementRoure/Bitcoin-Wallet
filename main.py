@@ -1,6 +1,3 @@
-from re import M
-import src.generate_seed as generate_seed
-
 menu_options = {
     1: 'Generate Seed',
     2: 'Option 2',
