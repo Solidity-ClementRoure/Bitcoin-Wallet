@@ -55,3 +55,24 @@ print("12 mnemonic words:")
 for word in words:
     print(word, end=" ") 
 print("",end="\n\n")
+
+############ PART 2 ###########
+
+# 1) Passer des 12 mots en une valeur hexa
+
+words_bin = ""
+
+for word in words:
+    with open("assets/words.txt") as myFile:
+        for num, line in enumerate(myFile, 0):
+            if word.strip() == line.strip():
+                b = bin(num)[2:].zfill(11)
+                words_bin+=b 
+                print(b, end=" ")
+print()
+
+print()
+words_hex = hex(int(words_bin, 2))[2:]
+print(words_hex)
+print()
+
