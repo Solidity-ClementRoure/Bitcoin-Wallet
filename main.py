@@ -13,7 +13,7 @@ def print_menu():
         print(key, '--', menu_options[key])
 
 def option1():
-    exec(open('generate_seed.py').read())
+    exec(open('src/generate_seed.py').read())
 
 def option2():
     print('Handle option \'Option 2\'')
