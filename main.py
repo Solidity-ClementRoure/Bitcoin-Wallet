@@ -1,5 +1,5 @@
 from re import M
-import generate_seed
+import src.generate_seed as generate_seed
 
 menu_options = {
     1: 'Generate Seed',
