@@ -52,4 +52,6 @@ for i in range(len(seed)//11):
     indx = int(seed[11*i:11*(i+1)],2)
     words.append(wordlist[indx])
 print("12 mnemonic words:") 
-print(words, end="\n\n") 
+for word in words:
+    print(word, end=" ") 
+print("",end="\n\n")
