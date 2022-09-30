@@ -33,4 +33,5 @@ seed = []
 for i in range(len(b)//11):
     indx = int(b[11*i:11*(i+1)],2)
     seed.append(wordlist[indx])
+print("12 mnemonic code:") 
 print(seed, end="\n\n") 
