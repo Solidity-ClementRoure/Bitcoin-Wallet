@@ -3,7 +3,7 @@ import binascii
 import secrets
 print()
 
-entropy = secrets.token_hex(32)
+entropy = secrets.token_hex(16)
 print("random generated entropy (in hexa): " + entropy, end="\n\n")
 
 # convert hexa to bytes
@@ -17,12 +17,12 @@ b = bin(int(binascii.hexlify(data),16))[2:].zfill(len(data)*8) + bin(int(h,16))[
 print("132 bits: ")
 i = 0
 for bit in b:
-    if i < 11:
+    if i < 10:
        print(bit, end = '')
        i+=1
     else:
        i=0
-       print(" ", end = '')
+       print(bit + " ", end = '')
 print()
 
 with open("assets/words.txt", "r") as f:
