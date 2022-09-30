@@ -13,7 +13,7 @@ print()
 
 # generate hash with sha256
 print("sha256: ")
-sha256 = hashlib.sha256(entropy_hex.encode('utf-8')).hexdigest()
+sha256 = hashlib.sha256(bytes.fromhex(entropy_hex)).hexdigest()
 
 print(sha256)
 print()
