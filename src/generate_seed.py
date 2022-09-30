@@ -6,32 +6,32 @@ print()
 # entropy
 print("Random Entropy in 128 bits: ")
 entropy_hex = secrets.token_hex(16)
-entropy_bin = bin(int(entropy_hex, 16))[2:].zfill(8)
-if(len(entropy_bin) < 128):
-    d = 128 - len(entropy_bin)
-    for i in range(d):
-       entropy_bin = "0"+entropy_bin
+#entropy_hex = "656d338db7c217ad57b2516cdddd6d06"
 
-print(entropy_bin)
+print(entropy_hex, end="\n")
 print()
 
-# get checksum (first 4 bits of entropy -> sha256)
+# generate hash with sha256
 print("sha256: ")
-entropy_string = binascii.a2b_hex(entropy_bin)
-sha256 = hashlib.sha256(entropy_string).hexdigest()
-sha256_bin = bin(int(sha256, 16))[2:].zfill(8)
-if(len(sha256_bin) < 256):
-    d = 256 - len(sha256_bin)
-    for i in range(d):
-       sha256_bin = "0"+sha256_bin
-print(sha256_bin)
+sha256 = hashlib.sha256(entropy_hex.encode('utf-8')).hexdigest()
+
+print(sha256)
 print()
 
+# generate seed by adding checksum
 print("seed (entropy + checksum): ")
-seed = entropy_bin + sha256_bin[0:4]
-print(seed)
+seed_hex = entropy_hex + sha256[0]
 
+print(seed_hex)
 print()
+
+# convert seed from hex to binary
+seed = bin(int(seed_hex, 16))[2:].zfill(8)
+if(len(seed) < 132):
+    d = 132 - len(seed)
+    for i in range(d):
+       seed = "0"+seed
+
 print("132 bits seed: ")
 i = 0
 for bit in seed:
