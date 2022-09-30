@@ -1,23 +1,22 @@
+from re import M
+import generate_seed
+
 menu_options = {
-    1: 'Option 1',
+    1: 'Generate Seed',
     2: 'Option 2',
     3: 'Option 3',
     4: 'Exit',
 }
 
-
 def print_menu():
     for key in menu_options.keys():
         print(key, '--', menu_options[key])
 
-
 def option1():
-    print('Handle option \'Option 1\'')
-
+    exec(open('generate_seed.py').read())
 
 def option2():
     print('Handle option \'Option 2\'')
-
 
 def option3():
     print('Handle option \'Option 3\'')

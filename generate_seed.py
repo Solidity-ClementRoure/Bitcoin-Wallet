@@ -1,17 +1,13 @@
-import hashlib # for SHA256 computation
-import binascii # for conversion between Hexa and bytes
+import hashlib
+import binascii
 import secrets
 print()
 
 entropy = secrets.token_hex(32)
 print("random generated entropy (in hexa): " + entropy, end="\n\n")
 
-data = entropy.strip() #cleaning of data
-data = binascii.unhexlify(data)
-if len(data) not in [16, 20, 24, 28, 32]:
-   raise ValueError(
-  "Data length should be one of the following: [16, 20, 24, 28, 32], but it is not (%d)." % len(data)
-   )
+# convert hexa to bytes
+data = binascii.unhexlify(entropy)
 
 h = hashlib.sha256(data).hexdigest()
 print("entropy after sha-256: " + h, end="\n\n")
