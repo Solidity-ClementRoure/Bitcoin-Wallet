@@ -1,22 +1,40 @@
+import secrets
 import hashlib
 import binascii
-import secrets
 print()
 
-entropy = secrets.token_hex(16)
-print("random generated entropy (in hexa): " + entropy, end="\n\n")
+# entropy
+print("Random Entropy in 128 bits: ")
+entropy_hex = secrets.token_hex(16)
+entropy_bin = bin(int(entropy_hex, 16))[2:].zfill(8)
+if(len(entropy_bin) < 128):
+    d = 128 - len(entropy_bin)
+    for i in range(d):
+       entropy_bin = "0"+entropy_bin
 
-# convert hexa to bytes
-data = binascii.unhexlify(entropy)
+print(entropy_bin)
+print()
 
-h = hashlib.sha256(data).hexdigest()
-print("entropy after sha-256: " + h, end="\n\n")
+# get checksum (first 4 bits of entropy -> sha256)
+print("sha256: ")
+entropy_string = binascii.a2b_hex(entropy_bin)
+sha256 = hashlib.sha256(entropy_string).hexdigest()
+sha256_bin = bin(int(sha256, 16))[2:].zfill(8)
+if(len(sha256_bin) < 256):
+    d = 256 - len(sha256_bin)
+    for i in range(d):
+       sha256_bin = "0"+sha256_bin
+print(sha256_bin)
+print()
 
-b = bin(int(binascii.hexlify(data),16))[2:].zfill(len(data)*8) + bin(int(h,16))[2:].zfill(256)[: len(data)* 8//32]
+print("seed (entropy + checksum): ")
+seed = entropy_bin + sha256_bin[0:4]
+print(seed)
 
-print("132 bits: ")
+print()
+print("132 bits seed: ")
 i = 0
-for bit in b:
+for bit in seed:
     if i < 10:
        print(bit, end = '')
        i+=1
@@ -27,11 +45,11 @@ print()
 
 with open("assets/words.txt", "r") as f:
          wordlist = [w.strip() for w in f.readlines()]
-print()
 
-seed = []
-for i in range(len(b)//11):
-    indx = int(b[11*i:11*(i+1)],2)
-    seed.append(wordlist[indx])
-print("12 mnemonic code:") 
-print(seed, end="\n\n") 
+print()
+words= []
+for i in range(len(seed)//11):
+    indx = int(seed[11*i:11*(i+1)],2)
+    words.append(wordlist[indx])
+print("12 mnemonic words:") 
+print(words, end="\n\n") 
