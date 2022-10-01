@@ -1,12 +1,14 @@
+import binascii
 import secrets
 import hashlib
-import binascii
+import unicodedata
+import base58check
 print()
 
 # entropy
 print("Random Entropy in 128 bits: ")
-entropy_hex = secrets.token_hex(16)
-#entropy_hex = "656d338db7c217ad57b2516cdddd6d06"
+#entropy_hex = secrets.token_hex(16)
+entropy_hex = "0c1e24e5917779d297e14d45f14e1a1a"
 
 print(entropy_hex, end="\n")
 print()
@@ -51,14 +53,14 @@ words= []
 for i in range(len(seed)//11):
     indx = int(seed[11*i:11*(i+1)],2)
     words.append(wordlist[indx])
+
 print("12 mnemonic words:") 
-for word in words:
-    print(word, end=" ") 
-print("",end="\n\n")
+phrase = " ".join(words)
+print(phrase,end="\n\n")
 
 ############ PART 2 ###########
 
-# 1) Passer des 12 mots en une valeur hexa
+# 1) Passer des 12 mots en une valeur hexa (optionnel)
 
 words_bin = ""
 
@@ -72,7 +74,67 @@ for word in words:
 print()
 
 print()
-words_hex = hex(int(words_bin, 2))[2:]
+words_hex = hex(int(words_bin, 2))[2:] # seed from mnemonic
 print(words_hex)
 print()
+
+# 2) 
+
+normalized_mnemonic = unicodedata.normalize("NFKD", phrase)
+password = "" # optional
+normalized_passphrase = unicodedata.normalize("NFKD", password)
+passphrase = "mnemonic" + normalized_passphrase
+mnemonic = normalized_mnemonic.encode("utf-8")
+passphrase = passphrase.encode("utf-8")
+
+# root seed in hexa
+bin_seed = hashlib.pbkdf2_hmac("sha512", mnemonic, passphrase, 2048).hex()
+print("512-bits Seed:")
+print(bin_seed)
+print()
+
+# root seed in binary
+
+# bin_seed = bin(int(bin_seed, 16))[2:].zfill(8)
+# if(len(bin_seed) < 512):
+#     d = 512 - len(bin_seed)
+#     for i in range(d):
+#        bin_seed = "0"+bin_seed
+
+# 3)
+
+# HMAC-SHA512
+bin_seed = hashlib.pbkdf2_hmac("sha512", bin_seed.encode("utf-8"), "Bitcoin seed".encode("utf-8"), 1).hex() #hashlib.sha512(bin_seed).hexdigest()
+bin_seed = bin(int(bin_seed, 16))[2:].zfill(8)
+if(len(bin_seed) < 512):
+    d = 512 - len(bin_seed)
+    for i in range(d):
+       bin_seed = "0"+bin_seed
+
+print("HMAC-SHA512 hash:")
+print(bin_seed)
+print()
+
+# right / left parts
+masterPrivateKey_bin = bin_seed[:256]
+masterChainKey_bin = bin_seed[256:]
+
+masterPrivateKey=hex(int(masterPrivateKey_bin, 2))[2:]
+masterChainKey=hex(int(masterChainKey_bin, 2))[2:]
+if len(masterPrivateKey) % 2 != 0:
+    masterPrivateKey= "0"+masterPrivateKey
+if len(masterChainKey) % 2 != 0:
+    masterChainKey= "0"+masterChainKey
+
+# base 58 encoding
+masterPrivateKey_b58=base58check.b58encode(bytes.fromhex(masterPrivateKey)).decode('utf-8')
+masterChainKey_b58=base58check.b58encode(bytes.fromhex(masterChainKey)).decode('utf-8')
+
+print("Master Private Key:")
+print(masterPrivateKey_b58)
+print()
+print("Master Chain Key:")
+print(masterChainKey_b58)
+print()
+
 
