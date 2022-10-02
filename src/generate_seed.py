@@ -3,6 +3,7 @@ import secrets
 import hashlib
 import unicodedata
 import base58check
+import hmac
 print()
 
 # entropy
@@ -87,48 +88,19 @@ passphrase = "mnemonic" + normalized_passphrase
 mnemonic = normalized_mnemonic.encode("utf-8")
 passphrase = passphrase.encode("utf-8")
 
-# root seed in hexa
-bin_seed = hashlib.pbkdf2_hmac("sha512", mnemonic, passphrase, 2048).hex()
+# root seed
+bin_seed = hashlib.pbkdf2_hmac("sha512", mnemonic, passphrase, 2048)
 print("512-bits Seed:")
-print(bin_seed)
+print(bin_seed.hex())
 print()
-
-# root seed in binary
-
-# bin_seed = bin(int(bin_seed, 16))[2:].zfill(8)
-# if(len(bin_seed) < 512):
-#     d = 512 - len(bin_seed)
-#     for i in range(d):
-#        bin_seed = "0"+bin_seed
-
-# 3)
 
 # HMAC-SHA512
-bin_seed = hashlib.pbkdf2_hmac("sha512", bin_seed.encode("utf-8"), "Bitcoin seed".encode("utf-8"), 1).hex() #hashlib.sha512(bin_seed).hexdigest()
-bin_seed = bin(int(bin_seed, 16))[2:].zfill(8)
-if(len(bin_seed) < 512):
-    d = 512 - len(bin_seed)
-    for i in range(d):
-       bin_seed = "0"+bin_seed
-
-print("HMAC-SHA512 hash:")
-print(bin_seed)
-print()
-
-# right / left parts
-masterPrivateKey_bin = bin_seed[:256]
-masterChainKey_bin = bin_seed[256:]
-
-masterPrivateKey=hex(int(masterPrivateKey_bin, 2))[2:]
-masterChainKey=hex(int(masterChainKey_bin, 2))[2:]
-if len(masterPrivateKey) % 2 != 0:
-    masterPrivateKey= "0"+masterPrivateKey
-if len(masterChainKey) % 2 != 0:
-    masterChainKey= "0"+masterChainKey
+I = hmac.new(b"Bitcoin seed", bin_seed, hashlib.sha512).digest()
+Il,Ir = I[:32], I[32:]
 
 # base 58 encoding
-masterPrivateKey_b58=base58check.b58encode(bytes.fromhex(masterPrivateKey)).decode('utf-8')
-masterChainKey_b58=base58check.b58encode(bytes.fromhex(masterChainKey)).decode('utf-8')
+masterPrivateKey_b58=base58check.b58encode(Ir).decode('utf-8')
+masterChainKey_b58=base58check.b58encode(Il).decode('utf-8')
 
 print("Master Private Key:")
 print(masterPrivateKey_b58)
