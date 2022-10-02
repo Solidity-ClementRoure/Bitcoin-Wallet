@@ -99,8 +99,8 @@ I = hmac.new(b"Bitcoin seed", bin_seed, hashlib.sha512).digest()
 Il,Ir = I[:32], I[32:]
 
 # base 58 encoding
-masterPrivateKey_b58=base58check.b58encode(Ir).decode('utf-8')
-masterChainKey_b58=base58check.b58encode(Il).decode('utf-8')
+masterPrivateKey_b58=base58check.b58encode(Il).decode('utf-8')
+masterChainKey_b58=base58check.b58encode(Ir).decode('utf-8')
 
 print("Master Private Key:")
 print(masterPrivateKey_b58)
