@@ -1,1 +1,45 @@
 Clément Roure - Antoine REVEL - Lucas Kaczmarski
+
+La première partie du code est chargée de générer l'entropie à l'aide de la librairie secrets. Ensuite, la fonction hash cette entropie avec sha-256.
+
+Puis, on garde les 4 1ers bits de ce hash, le checksum.
+
+On ajoute ces 4 bits a l'entropie initiale pour obtenir la seed.
+
+Ensuite, on conevrti cette seed en binaire. On a alors 12 blocs de 11 bits.
+
+Chaque bloc de 11 bits correspond à un index des 2048 mots anglais.
+
+On converti donc ces 12 blocs en un mot, pour obtenir le code mnemonic composé de 12 mots.
+
+
+Pour importer une seed a partit d'un ensemble de mots, on converti les 12 mots en 1 seul string.
+
+Puis, on recupere l'index de chacun de ces mots. L'index est ensuite converti en 11 bits / mot
+
+On converti a la fin les 256 bits en valeur hexa pour obtenir la seed.
+
+
+Pour passer des mnemonic a la root seed de 512 bits, on utilise al fonction hamc-sha512.
+
+On prend en parametre les 12 mots sous forme de string ayant été normalisé avec NKFD.
+et le mot "mnemonic" + un mot de passe optionnel.
+
+On réitère le hachage 2048 fois pour obtenir la root seed.
+
+
+Pour générer, on utilise aussi la fonction hamc-sha512 avec en parametre la root seed de 512 bits.
+
+Les 256 bits de gauche donneront la master private key et les 256 de droite la master chain key.
+
+On converti ces resultats en base-58 pour une meilleur visibilité.
+
+
+La clé publique s'obtient en utilisant la fonction SECP256k1 et la clé privée en paramètre.
+
+A la fin, on compresse cette clé publique en rajoutant 02 ou 03 selon si la valeur de l'ordonnée y est paire ou impaire.
+
+
+
+
+
