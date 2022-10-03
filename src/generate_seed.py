@@ -1,4 +1,3 @@
-import binascii
 import secrets
 import hashlib
 import unicodedata
@@ -10,8 +9,8 @@ print()
 
 # entropy
 print("Random Entropy in 128 bits: ")
-#entropy_hex = secrets.token_hex(16)
-entropy_hex = "0c1e24e5917779d297e14d45f14e1a1a"
+entropy_hex = secrets.token_hex(16)
+#entropy_hex = "0c1e24e5917779d297e14d45f14e1a1a"
 
 print(entropy_hex, end="\n")
 print()
@@ -78,6 +77,8 @@ print()
 
 print()
 words_hex = hex(int(words_bin, 2))[2:] # seed from mnemonic
+if len(words_hex) % 2 == 0:
+    words_hex="0"+words_hex
 print(words_hex)
 print()
 
@@ -111,7 +112,6 @@ print("Master Chain Key:")
 print(masterChainKey_b58)
 print()
 
-# Hex decoding the private key to bytes using codecs library
 # Generating a public key in bytes using SECP256k1 & ecdsa library
 public_key_raw = ecdsa.SigningKey.from_string(Il, curve=ecdsa.SECP256k1).verifying_key
 public_key_bytes = public_key_raw.to_string()
