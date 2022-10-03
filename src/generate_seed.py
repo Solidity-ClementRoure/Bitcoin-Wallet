@@ -62,7 +62,7 @@ print(phrase,end="\n\n")
 
 ############ PART 2 ###########
 
-# 1) Passer des 12 mots en une valeur hexa (optionnel)
+# 1) Passer des 12 mots en une valeur hexa
 
 words_bin = ""
 
