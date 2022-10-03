@@ -133,7 +133,7 @@ print(public_key_compressed)
 print()
 
 print("Public Key (base 58):")
-public_key_compressed = base58check.b58encode(bytes.fromhex(public_key)).decode('utf-8')
+public_key_compressed = base58check.b58encode(bytes.fromhex(public_key_compressed)).decode('utf-8')
 print(public_key_compressed)
 
 print()
