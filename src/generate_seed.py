@@ -4,6 +4,8 @@ import hashlib
 import unicodedata
 import base58check
 import hmac
+import codecs
+import ecdsa
 print()
 
 # entropy
@@ -107,6 +109,33 @@ print(masterPrivateKey_b58)
 print()
 print("Master Chain Key:")
 print(masterChainKey_b58)
+print()
+
+# Hex decoding the private key to bytes using codecs library
+# Generating a public key in bytes using SECP256k1 & ecdsa library
+public_key_raw = ecdsa.SigningKey.from_string(Il, curve=ecdsa.SECP256k1).verifying_key
+public_key_bytes = public_key_raw.to_string()
+# Hex encoding the public key from bytes
+public_key_hex = codecs.encode(public_key_bytes, 'hex')
+# Bitcoin public key begins with bytes 0x04 so we have to add the bytes at the start
+public_key = (b'04' + public_key_hex).decode("utf-8")
+
+# Checking if the last byte is odd or even
+if (ord(bytearray.fromhex(public_key[-2:])) % 2 == 0):
+    public_key_compressed = '02'
+else:
+    public_key_compressed = '03'
+    
+# Add bytes 0x02 to the X of the key if even or 0x03 if odd
+public_key_compressed += public_key[2:66]
+print("Public Key (hex):")
+print(public_key_compressed)
+print()
+
+print("Public Key (base 58):")
+public_key_compressed = base58check.b58encode(bytes.fromhex(public_key)).decode('utf-8')
+print(public_key_compressed)
+
 print()
 
 
