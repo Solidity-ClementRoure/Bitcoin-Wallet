@@ -106,10 +106,12 @@ masterPrivateKey_b58=base58check.b58encode(Il).decode('utf-8')
 masterChainKey_b58=base58check.b58encode(Ir).decode('utf-8')
 
 print("Master Private Key:")
-print(masterPrivateKey_b58)
+print(codecs.encode(Il, 'hex').decode('utf-8'))
+#print(masterPrivateKey_b58)
 print()
 print("Master Chain Key:")
-print(masterChainKey_b58)
+print(codecs.encode(Ir, 'hex').decode('utf-8'))
+#print(masterChainKey_b58)
 print()
 
 # Generating a public key in bytes using SECP256k1 & ecdsa library
